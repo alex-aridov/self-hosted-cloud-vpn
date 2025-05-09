@@ -4,5 +4,4 @@ key.json
 
 # other
 *.lock.hcl
-*.terraform
-terraform.tfstate*
+.terraform
