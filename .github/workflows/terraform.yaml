@@ -29,13 +29,16 @@ jobs:
           terraform_version: 1.11.4
 
       - name: Terraform Init
+        working-directory: terraform
         run: terraform init
 
       - name: Yandex Cloud key
+        working-directory: terraform
         run: |
           cat <<EOF > key.json
           ${{ secrets.YC_KEY }}
           EOF
 
       - name: Terraform Plan
+        working-directory: terraform
         run: terraform plan
