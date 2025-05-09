@@ -1,7 +1,2 @@
 .idea
 *.iml
-key.json
-*.lock.hcl
-*.terraform
-terraform.tfstate*
-secure.tf

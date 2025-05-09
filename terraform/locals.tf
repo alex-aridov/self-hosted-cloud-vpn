@@ -2,10 +2,10 @@ locals {
   server = {
     public_key  = var.server_public_key
     private_key = var.server_private_key
-    password = var.server_password
+    password    = var.server_password
     dns = {
-      token = var.server_dns_token
-      host = "ru-vpn-aleks-aridov.dynv6.net"
+      token = var.dns_token
+      host  = var.dns_host
     }
   }
 
@@ -18,7 +18,7 @@ locals {
   ]
 
   wireguard_config = templatefile("${path.module}/template/wireguard.conf.tpl", {
-    peers = local.peers
+    peers  = local.peers
     server = local.server
   })
 }

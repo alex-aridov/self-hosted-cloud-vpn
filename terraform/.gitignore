@@ -1,0 +1,8 @@
+# creds
+key.json
+.env
+
+# other
+*.lock.hcl
+*.terraform
+terraform.tfstate*

@@ -52,14 +52,14 @@ resource "yandex_compute_instance" "vpn-server" {
   }
 
   network_interface {
-    subnet_id = yandex_vpc_subnet.vpn-subnet.id
+    subnet_id          = yandex_vpc_subnet.vpn-subnet.id
     security_group_ids = [yandex_vpc_security_group.vpn-sg.id]
-    nat       = true
+    nat                = true
   }
 
   metadata = {
     user-data = templatefile("${path.module}/template/cloud-init.yml.tpl", {
-      server = local.server
+      server           = local.server
       wireguard_config = local.wireguard_config
     })
   }

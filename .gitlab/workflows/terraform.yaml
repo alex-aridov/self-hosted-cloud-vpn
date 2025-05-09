@@ -1,0 +1,41 @@
+name: Terraform Apply
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: terraform-deploy
+  cancel-in-progress: false
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    env:
+      TF_VAR_server_public_key: ${{ vars.SERVER_PUBLIC_KEY }}
+      TF_VAR_server_private_key: ${{ secrets.SERVER_PRIVATE_KEY }}
+      TF_VAR_client_public_key: ${{ vars.CLIENT_PUBLIC_KEY }}
+      TF_VAR_client_private_key: ${{ secrets.CLIENT_PRIVATE_KEY }}
+      TF_VAR_server_password: ${{ secrets.SERVER_PASSWORD }}
+      TF_VAR_dns_token: ${{ secrets.DNS_TOKEN }}
+      TF_VAR_dns_host: ${{ vars.DNS_HOST }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.11.4
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Yandex Cloud key
+        run: |
+          cat <<EOF > key.json
+          ${{ secrets.YC_KEY }}
+          EOF
+
+      - name: Terraform Plan
+        run: terraform plan
