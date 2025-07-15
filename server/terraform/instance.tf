@@ -26,7 +26,6 @@ resource "yandex_vpc_security_group" "vpn-sg" {
   }
 }
 
-
 resource "yandex_compute_instance" "vpn-server" {
   name        = "vpn"
   platform_id = "standard-v3" //intel-ice-lake
@@ -65,6 +64,25 @@ resource "yandex_compute_instance" "vpn-server" {
   }
 }
 
+locals {
+  client_config = templatefile("${path.module}/template/client.conf.tpl", {
+    client_private_key = local.peers.0.private_key
+    client_ip          = "10.0.0.2/32"
+    server_public_key  = local.server.public_key
+    server_endpoint    = "${yandex_compute_instance.vpn-server.network_interface[0].nat_ip_address}:51820"
+  })
+}
+
+resource "local_file" "wg_client_conf" {
+  content  = local.client_config
+  filename = "${path.module}/wg-client.conf"
+}
+
 output "external_ip" {
   value = yandex_compute_instance.vpn-server.network_interface.0.nat_ip_address
+}
+
+output "client_config_content" {
+  value = local.client_config
+  sensitive = true
 }
